@@ -49,8 +49,11 @@ body{
   font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   font-feature-settings:"tnum" 1;
 }
-#stage{position:fixed; inset:0; display:grid; place-items:center; background:var(--bg)}
-#deck{width:1280px; height:720px; position:relative; transform-origin:center center}
+/* 视口窄于 1280 时，grid 居中会把溢出只推向一侧、左边被切掉且滚不到。
+   改用绝对定位 + translate 居中：布局盒退化成一个点，缩放不再受溢出裁剪影响。 */
+#stage{position:fixed; inset:0; overflow:hidden; background:var(--bg)}
+#deck{position:absolute; left:50%; top:50%; width:1280px; height:720px;
+  transform-origin:center center; transform:translate(-50%,-50%)}
 
 .slide{position:absolute; inset:0; padding:48px 64px; opacity:0; visibility:hidden; transition:opacity .26s ease}
 .slide.on{opacity:1; visibility:visible}
@@ -210,8 +213,8 @@ ul.ticks li::before{content:attr(data-m); color:var(--accent); font-size:15.5px}
 
 @media print{
   #ctl,#prog{display:none}
-  #stage{position:static; display:block}
-  #deck{transform:none!important}
+  #stage{position:static; display:block; overflow:visible}
+  #deck{position:static; left:auto; top:auto; transform:none!important}
   .slide{position:relative; opacity:1!important; visibility:visible!important; page-break-after:always; width:1280px; height:720px}
   .slide.hidden{display:none}
   @page{size:1280px 720px; margin:0}
@@ -886,9 +889,12 @@ ul.ticks li::before{content:attr(data-m); color:var(--accent); font-size:15.5px}
     if (scrimEl.classList.contains('open')) markToc();
   }
 
+  var lastW = 0, lastH = 0;
   function fit(){
-    var k = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-    deckEl.style.transform = 'scale(' + k + ')';
+    var w = window.innerWidth, h = window.innerHeight;
+    lastW = w; lastH = h;
+    var k = Math.min(w / 1280, h / 720);
+    deckEl.style.transform = 'translate(-50%,-50%) scale(' + k + ')';
   }
 
   function setMode(isLite){
@@ -935,7 +941,19 @@ ul.ticks li::before{content:attr(data-m); color:var(--accent); font-size:15.5px}
   }
   window.addEventListener('mousemove', wake);
   window.addEventListener('keydown', wake);
+
+  // 只监听 window.resize 不够：页面嵌在 iframe 里时（如 artifact 宿主），
+  // 外层改宽度不一定把 resize 事件传进来，缩放就停在旧尺寸、内容被切。
+  // 用 ResizeObserver 直接观察根元素，再加 visualViewport 兜移动端。
   window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  if (window.ResizeObserver) { new ResizeObserver(fit).observe(document.documentElement); }
+  if (window.visualViewport) { window.visualViewport.addEventListener('resize', fit); }
+  // 最后一道兜底：有些宿主（含部分 iframe 场景）任何 resize 通知都收不到，
+  // 于是每 250ms 比对一次尺寸，变了才重算——不依赖事件，代价可忽略。
+  setInterval(function(){
+    if (window.innerWidth !== lastW || window.innerHeight !== lastH) fit();
+  }, 250);
 
   fit();
   rebuild(null);
