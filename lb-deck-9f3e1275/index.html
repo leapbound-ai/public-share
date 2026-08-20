@@ -126,7 +126,7 @@ ul.ticks li::before{content:attr(data-m); color:var(--accent); font-size:15.5px}
 
 /* 技术架构层 */
 .layer{display:grid; grid-template-columns:44px 1fr; gap:16px; align-items:center;
-  background:var(--card); border:.7px solid var(--line); border-radius:var(--radius); padding:14px 22px}
+  background:var(--card); border:.7px solid var(--line); border-radius:var(--radius); padding:12px 22px}
 .layer.hi{background:var(--fog); border:1.2px solid var(--accent)}
 .layer .n{color:var(--accent); font-weight:800; font-size:19px}
 .layer .t{color:var(--ink); font-weight:700; font-size:18.5px}
@@ -143,18 +143,18 @@ ul.ticks li::before{content:attr(data-m); color:var(--accent); font-size:15.5px}
 .mx .os{color:var(--accent); font-weight:800; font-size:13px; margin-top:12px}
 
 /* 交付清单页：10 行 + 5 项指标，单独压紧一档 */
-.dense h1{font-size:28px; margin-bottom:8px}
+.dense h1{font-size:29px; margin-bottom:12px}
 .dense .kicker{font-size:14.5px; margin-bottom:14px}
 .dense .colhead{gap:10px; margin-bottom:11px}
 .dense .colhead span{font-size:16px}
-.dense .rows{gap:5px}
-.dense .row .nm{font-size:14.5px}
-.dense .row .ds{font-size:12px; margin-top:2px; line-height:1.35}
+.dense .rows{gap:6px}
+.dense .row .nm{font-size:15.5px}
+.dense .row .ds{font-size:12.5px; margin-top:3px; line-height:1.4}
 .dense .pill{font-size:12px; padding:5px 9px}
-.dense .stat{gap:6px}
+.dense .stat{gap:8px}
 .dense .stat .lab{font-size:13.5px}
-.dense .stat .big.xs{font-size:19.5px}
-.dense .stat .txt{font-size:12.5px; line-height:1.45}
+.dense .stat .big.xs{font-size:20.5px}
+.dense .stat .txt{font-size:13px; line-height:1.5}
 
 /* 封面 */
 .cv{display:flex; flex-direction:column; justify-content:center; height:100%}
@@ -448,8 +448,7 @@ ul.ticks li::before{content:attr(data-m); color:var(--accent); font-size:15.5px}
 <section class="slide dense" data-lite data-t="首个产业客户：交付清单与量化结果">
   <div class="tag"></div><div class="mark"></div>
   <div class="pad">
-    <h1 class="xs" style="margin-bottom:12px">一份已锁定的采购合同，五个阶段，逐块交付验收</h1>
-    <div class="kicker">买方高管直接下需求、催办并参与验收</div>
+    <h1 class="xs">一份已锁定的采购合同，五个阶段，逐块交付验收</h1>
     <div style="display:grid;grid-template-columns:.56fr .44fr;gap:42px">
       <div>
         <div class="colhead"><div class="rule"></div><span>功能块与状态</span></div>
